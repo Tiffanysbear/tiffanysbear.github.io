@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="AMD、CMD,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="重新理解前端系列 — AMD、CMDauthor: @TiffanysBear  本文主要是针对之前一些熟悉的前端概念，再次回顾的时候，结合自己的开发经验和使用，进行再次理解。经过了开发和线上使用之后，会有更为深刻的印象。对比requirejs源码分析，实现一个模块加载器，需要考虑哪些问题。 起源其实对于AMD和CMD的不同，之前一直是拘泥在使用上的不同。没有深刻的认识为什么会有不同，其实主要是">
+<meta name="keywords" content="AMD、CMD">
+<meta property="og:type" content="article">
+<meta property="og:title" content="重新理解前端系列 — AMD、CMD">
+<meta property="og:url" content="https://github.com/Tiffanysbear/tiffanysbear.github.io/2019/08/21/重新理解AMD、CMD/index.html">
+<meta property="og:site_name" content="TiffanysBear">
+<meta property="og:description" content="重新理解前端系列 — AMD、CMDauthor: @TiffanysBear  本文主要是针对之前一些熟悉的前端概念，再次回顾的时候，结合自己的开发经验和使用，进行再次理解。经过了开发和线上使用之后，会有更为深刻的印象。对比requirejs源码分析，实现一个模块加载器，需要考虑哪些问题。 起源其实对于AMD和CMD的不同，之前一直是拘泥在使用上的不同。没有深刻的认识为什么会有不同，其实主要是">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-10-20T07:54:24.727Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="重新理解前端系列 — AMD、CMD">
+<meta name="twitter:description" content="重新理解前端系列 — AMD、CMDauthor: @TiffanysBear  本文主要是针对之前一些熟悉的前端概念，再次回顾的时候，结合自己的开发经验和使用，进行再次理解。经过了开发和线上使用之后，会有更为深刻的印象。对比requirejs源码分析，实现一个模块加载器，需要考虑哪些问题。 起源其实对于AMD和CMD的不同，之前一直是拘泥在使用上的不同。没有深刻的认识为什么会有不同，其实主要是">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/Tiffanysbear/tiffanysbear.github.io/2019/08/21/重新理解AMD、CMD/">
+
+
+
+
+
+  <title>重新理解前端系列 — AMD、CMD | TiffanysBear</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband">
+    </div>
+    <a href="https://github.com/tiffanysbear" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">TiffanysBear</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-vue">
+          <a href="/categories/Vue" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>
+            
+            Vue
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-react">
+          <a href="/categories/React" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>
+            
+            React
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Tiffanysbear/tiffanysbear.github.io/2019/08/21/重新理解AMD、CMD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TiffanysBear">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="TiffanysBear">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">重新理解前端系列 — AMD、CMD</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-21T11:27:29+08:00">
+                2019-08-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Words count in article&#58;</span>
+                
+                <span title="Words count in article">
+                  2.2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>重新理解前端系列 — AMD、CMD<br>author: <a href="https://tiffanysbear.github.io/" target="_blank" rel="noopener">@TiffanysBear</a></p>
+</blockquote>
+<p>本文主要是针对之前一些熟悉的前端概念，再次回顾的时候，结合自己的开发经验和使用，进行再次理解。经过了开发和线上使用之后，会有更为深刻的印象。对比requirejs源码分析，实现一个模块加载器，需要考虑哪些问题。</p>
+<h3 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h3><p>其实对于AMD和CMD的不同，之前一直是拘泥在使用上的不同。没有深刻的认识为什么会有不同，其实主要是因为浏览器端和 Node 端不同性能特点和瓶颈带来的不同。</p>
+<p>早期的js模块化主要用于浏览器端，主要的需求和瓶颈在于带宽，需要将js从服务端下载下来，从而带来的网络性能开销，因此主要是满足对于作用域、按需加载的需求。因此AMD（异步模块定义）的出现，适合浏览器端环境。</p>
+<p>而后出现Node之后，主要的性能开销不再是网络性能，磁盘的读写和开销可以忽略不计；CMD的出现更符合Node 对于CommonJS的定义和理解，在运行时进行加载，引入时只是产生引用指向关系。</p>
+<p>因此两者产生了不同的使用特点，在出现循环引用时，就产生了不同的现象。以下是针对 requirejs 源码部分的解读。如果有问题，欢迎提问纠正。</p>
+<h4 id="1、动态加载一个js模块的方法，怎么保证异步和回调的执行"><a href="#1、动态加载一个js模块的方法，怎么保证异步和回调的执行" class="headerlink" title="1、动态加载一个js模块的方法，怎么保证异步和回调的执行"></a>1、动态加载一个js模块的方法，怎么保证异步和回调的执行</h4><p>一先开始是需要判断环境，浏览器环境和webworker环境；如果是浏览器环境，通过<code>document.createElement</code> 创建script标签，使用async属性使js能进行异步加载, IE等不兼容async字段的，通过监听 load 、 onreadystatechange 事件执行回调，监听脚本加载完成。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">req.createNode = function (config, moduleName, url) &#123;</span><br><span class="line">    var node = config.xhtml ?</span><br><span class="line">        document.createElementNS(&apos;http://www.w3.org/1999/xhtml&apos;, &apos;html:script&apos;) :</span><br><span class="line">        document.createElement(&apos;script&apos;);</span><br><span class="line">    node.type = config.scriptType || &apos;text/javascript&apos;;</span><br><span class="line">    node.charset = &apos;utf-8&apos;;</span><br><span class="line">    node.async = true; //创建script标签添加了async属性</span><br><span class="line">    return node;</span><br><span class="line">&#125;;</span><br><span class="line">req.load = function (context, moduleName, url) &#123; //用来进行js模块加载的方法</span><br><span class="line">    var config = (context &amp;&amp; context.config) || &#123;&#125;,</span><br><span class="line">    	node;</span><br><span class="line">    if (isBrowser) &#123; //在浏览器中加载js文件</span><br><span class="line">    </span><br><span class="line">        node = req.createNode(config, moduleName, url); //创建一个script标签</span><br><span class="line">        </span><br><span class="line">        node.setAttribute(&apos;data-requirecontext&apos;, context.contextName); //requirecontext默认为&apos;_&apos;</span><br><span class="line">        node.setAttribute(&apos;data-requiremodule&apos;, moduleName); //当前模块名</span><br><span class="line">        </span><br><span class="line">        if (node.attachEvent &amp;&amp;</span><br><span class="line">            !(node.attachEvent.toString &amp;&amp; node.attachEvent.toString().indexOf(&apos;[native code&apos;) &lt; 0) &amp;&amp;</span><br><span class="line">            !isOpera) &#123;</span><br><span class="line">            </span><br><span class="line">            useInteractive = true;</span><br><span class="line">            </span><br><span class="line">            node.attachEvent(&apos;onreadystatechange&apos;, context.onScriptLoad);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            node.addEventListener(&apos;load&apos;, context.onScriptLoad, false);</span><br><span class="line">            node.addEventListener(&apos;error&apos;, context.onScriptError, false);</span><br><span class="line">        &#125;</span><br><span class="line">        node.src = url;</span><br><span class="line">        </span><br><span class="line">        if (config.onNodeCreated) &#123; //script标签创建时的回调</span><br><span class="line">            config.onNodeCreated(node, config, moduleName, url);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        currentlyAddingScript = node;</span><br><span class="line">        if (baseElement) &#123; //将script标签添加到页面中</span><br><span class="line">            head.insertBefore(node, baseElement);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            head.appendChild(node);</span><br><span class="line">        &#125;</span><br><span class="line">        currentlyAddingScript = null;</span><br><span class="line">        </span><br><span class="line">        return node;</span><br><span class="line">    &#125; else if (isWebWorker) &#123; //在webWorker环境中</span><br><span class="line">    	try &#123;</span><br><span class="line">            setTimeout(function () &#123; &#125;, 0);</span><br><span class="line">            importScripts(url); //webWorker中使用importScripts来加载脚本</span><br><span class="line">            </span><br><span class="line">            context.completeLoad(moduleName);</span><br><span class="line">    	&#125; catch (e) &#123; //加载失败</span><br><span class="line">            context.onError(makeError(&apos;importscripts&apos;,</span><br><span class="line">                &apos;importScripts failed for &apos; +</span><br><span class="line">                moduleName + &apos; at &apos; + url,</span><br><span class="line">                e,</span><br><span class="line">                [moduleName]));</span><br><span class="line">    	&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2、怎么判断去加载js，怎么保证加载的顺序"><a href="#2、怎么判断去加载js，怎么保证加载的顺序" class="headerlink" title="2、怎么判断去加载js，怎么保证加载的顺序"></a>2、怎么判断去加载js，怎么保证加载的顺序</h4><p>通过 setTimeout 放入下一个队列中，保证加载顺序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">//通过setTimeout的方式加载依赖，放入下一个队列，保证加载顺序</span><br><span class="line">context.nextTick(function () &#123;</span><br><span class="line">	//Some defines could have been added since the</span><br><span class="line">	//require call, collect them.</span><br><span class="line">	intakeDefines();</span><br><span class="line"></span><br><span class="line">	requireMod = getModule(makeModuleMap(null, relMap));</span><br><span class="line"></span><br><span class="line">	//Store if map config should be applied to this require</span><br><span class="line">	//call for dependencies.</span><br><span class="line">	requireMod.skipMap = options.skipMap;</span><br><span class="line"></span><br><span class="line">	requireMod.init(deps, callback, errback, &#123;</span><br><span class="line">		enabled: true</span><br><span class="line">	&#125;);</span><br><span class="line"></span><br><span class="line">	checkLoaded();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="3、require中的js文件是怎么判断已经loaded，怎么保证加载数据的数量是正确的？"><a href="#3、require中的js文件是怎么判断已经loaded，怎么保证加载数据的数量是正确的？" class="headerlink" title="3、require中的js文件是怎么判断已经loaded，怎么保证加载数据的数量是正确的？"></a>3、require中的js文件是怎么判断已经loaded，怎么保证加载数据的数量是正确的？</h4><p>依赖数量，是通过 depCount 来计算的，通过循环遍历，统计具体的依赖数量；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line">// ...</span><br><span class="line">enable: function () &#123;</span><br><span class="line">	enabledRegistry[this.map.id] = this;</span><br><span class="line">	this.enabled = true;</span><br><span class="line"></span><br><span class="line">	//Set flag mentioning that the module is enabling,</span><br><span class="line">	//so that immediate calls to the defined callbacks</span><br><span class="line">	//for dependencies do not trigger inadvertent load</span><br><span class="line">	//with the depCount still being zero.</span><br><span class="line">	this.enabling = true;</span><br><span class="line"></span><br><span class="line">	//enable每一个依赖</span><br><span class="line">	each(this.depMaps, bind(this, function (depMap, i) &#123;</span><br><span class="line">		var id, mod, handler;</span><br><span class="line"></span><br><span class="line">		if (typeof depMap === &apos;string&apos;) &#123;</span><br><span class="line">			//Dependency needs to be converted to a depMap</span><br><span class="line">			//and wired up to this module.</span><br><span class="line">			depMap = makeModuleMap(depMap,</span><br><span class="line">				(this.map.isDefine ? this.map : this.map.parentMap),</span><br><span class="line">				false,</span><br><span class="line">				!this.skipMap);</span><br><span class="line">			this.depMaps[i] = depMap; //获取的依赖映射</span><br><span class="line"></span><br><span class="line">			handler = getOwn(handlers, depMap.id);</span><br><span class="line"></span><br><span class="line">			if (handler) &#123;</span><br><span class="line">				this.depExports[i] = handler(this);</span><br><span class="line">				return;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			this.depCount += 1; //依赖项+1</span><br><span class="line"></span><br><span class="line">			on(depMap, &apos;defined&apos;, bind(this, function (depExports) &#123;</span><br><span class="line">				if (this.undefed) &#123;</span><br><span class="line">					return;</span><br><span class="line">				&#125;</span><br><span class="line">				this.defineDep(i, depExports); //加载完毕的依赖模块放入depExports中，通过apply方式传入require定义的函数中</span><br><span class="line">				this.check();</span><br><span class="line">			&#125;)); //绑定defined事件，同时将dep添加到registry中</span><br><span class="line"></span><br><span class="line">			if (this.errback) &#123;</span><br><span class="line">				on(depMap, &apos;error&apos;, bind(this, this.errback));</span><br><span class="line">			&#125; else if (this.events.error) &#123;</span><br><span class="line">				// No direct errback on this module, but something</span><br><span class="line">				// else is listening for errors, so be sure to</span><br><span class="line">				// propagate the error correctly.</span><br><span class="line">				on(depMap, &apos;error&apos;, bind(this, function (err) &#123;</span><br><span class="line">					this.emit(&apos;error&apos;, err);</span><br><span class="line">				&#125;));</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		id = depMap.id;</span><br><span class="line">		mod = registry[id];</span><br><span class="line"></span><br><span class="line">		//跳过一些特殊模块，比如：&apos;require&apos;, &apos;exports&apos;, &apos;module&apos;</span><br><span class="line">		//Also, don&apos;t call enable if it is already enabled,</span><br><span class="line">		//important in circular dependency cases.</span><br><span class="line">		if (!hasProp(handlers, id) &amp;&amp; mod &amp;&amp; !mod.enabled) &#123;</span><br><span class="line">			context.enable(depMap, this); //加载依赖</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;));</span><br><span class="line"></span><br><span class="line">	//Enable each plugin that is used in</span><br><span class="line">	//a dependency</span><br><span class="line">	eachProp(this.pluginMaps, bind(this, function (pluginMap) &#123;</span><br><span class="line">		var mod = getOwn(registry, pluginMap.id);</span><br><span class="line">		if (mod &amp;&amp; !mod.enabled) &#123;</span><br><span class="line">			context.enable(pluginMap, this);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;));</span><br><span class="line"></span><br><span class="line">	this.enabling = false;</span><br><span class="line"></span><br><span class="line">	this.check();</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<p>判断单个文件加载成功，是通过 checkLoaded 每间隔 50s 做一次轮询进行判断，变量 inCheckLoaded 作为标识；下面是 checkLoaded 函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line">function checkLoaded() &#123;</span><br><span class="line">	var err, usingPathFallback,</span><br><span class="line">		waitInterval = config.waitSeconds * 1000,</span><br><span class="line">		//It is possible to disable the wait interval by using waitSeconds of 0.</span><br><span class="line">		expired = waitInterval &amp;&amp; (context.startTime + waitInterval) &lt; new Date().getTime(),</span><br><span class="line">		noLoads = [],</span><br><span class="line">		reqCalls = [],</span><br><span class="line">		stillLoading = false,</span><br><span class="line">		needCycleCheck = true;</span><br><span class="line"></span><br><span class="line">	//Do not bother if this call was a result of a cycle break.</span><br><span class="line">	if (inCheckLoaded) &#123;</span><br><span class="line">		return;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	inCheckLoaded = true;</span><br><span class="line"></span><br><span class="line">	//Figure out the state of all the modules.</span><br><span class="line">	eachProp(enabledRegistry, function (mod) &#123;</span><br><span class="line">		var map = mod.map,</span><br><span class="line">			modId = map.id;</span><br><span class="line"></span><br><span class="line">		//Skip things that are not enabled or in error state.</span><br><span class="line">		if (!mod.enabled) &#123;</span><br><span class="line">			return;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		if (!map.isDefine) &#123;</span><br><span class="line">			reqCalls.push(mod);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		if (!mod.error) &#123;</span><br><span class="line">			//If the module should be executed, and it has not</span><br><span class="line">			//been inited and time is up, remember it.</span><br><span class="line">			if (!mod.inited &amp;&amp; expired) &#123;</span><br><span class="line">				if (hasPathFallback(modId)) &#123;</span><br><span class="line">					usingPathFallback = true;</span><br><span class="line">					stillLoading = true;</span><br><span class="line">				&#125; else &#123;</span><br><span class="line">					noLoads.push(modId);</span><br><span class="line">					removeScript(modId);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125; else if (!mod.inited &amp;&amp; mod.fetched &amp;&amp; map.isDefine) &#123;</span><br><span class="line">				stillLoading = true;</span><br><span class="line">				if (!map.prefix) &#123;</span><br><span class="line">					//No reason to keep looking for unfinished</span><br><span class="line">					//loading. If the only stillLoading is a</span><br><span class="line">					//plugin resource though, keep going,</span><br><span class="line">					//because it may be that a plugin resource</span><br><span class="line">					//is waiting on a non-plugin cycle.</span><br><span class="line">					return (needCycleCheck = false);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;);</span><br><span class="line"></span><br><span class="line">	if (expired &amp;&amp; noLoads.length) &#123;</span><br><span class="line">		//If wait time expired, throw error of unloaded modules.</span><br><span class="line">		err = makeError(&apos;timeout&apos;, &apos;Load timeout for modules: &apos; + noLoads, null, noLoads);</span><br><span class="line">		err.contextName = context.contextName;</span><br><span class="line">		return onError(err);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	//Not expired, check for a cycle.</span><br><span class="line">	if (needCycleCheck) &#123;</span><br><span class="line">		each(reqCalls, function (mod) &#123;</span><br><span class="line">			breakCycle(mod, &#123;&#125;, &#123;&#125;);</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	//If still waiting on loads, and the waiting load is something</span><br><span class="line">	//other than a plugin resource, or there are still outstanding</span><br><span class="line">	//scripts, then just try back later.</span><br><span class="line">	if ((!expired || usingPathFallback) &amp;&amp; stillLoading) &#123;</span><br><span class="line">		//Something is still waiting to load. Wait for it, but only</span><br><span class="line">		//if a timeout is not already in effect.</span><br><span class="line">		if ((isBrowser || isWebWorker) &amp;&amp; !checkLoadedTimeoutId) &#123;</span><br><span class="line">			checkLoadedTimeoutId = setTimeout(function () &#123;</span><br><span class="line">				checkLoadedTimeoutId = 0;</span><br><span class="line">				checkLoaded();</span><br><span class="line">			&#125;, 50);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	inCheckLoaded = false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4、如果有循环引用，怎么判断出的，怎么解决的"><a href="#4、如果有循环引用，怎么判断出的，怎么解决的" class="headerlink" title="4、如果有循环引用，怎么判断出的，怎么解决的"></a>4、如果有循环引用，怎么判断出的，怎么解决的</h4><p>这部分暂且还有点疑惑，先mark一下，之后再理解；</p>
+<p>看到有个 breakCycle 函数，执行条件是 needCycleCheck 为 true，但是当 <code>!mod.inited &amp;&amp; mod.fetched &amp;&amp; map.isDefine</code> 模块未被初始化完成，但是已经获取过定义过之后，且 在 map.prefix 有前缀，会启动 breakCycle 检查；至于为什么要这么做，只能猜测是为了到模块require时循环引用打破轮询查询加载状态等待的问题，现在先留一个疑问。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">function breakCycle(mod, traced, processed) &#123;</span><br><span class="line">	var id = mod.map.id;</span><br><span class="line"></span><br><span class="line">	if (mod.error) &#123;</span><br><span class="line">		mod.emit(&apos;error&apos;, mod.error);</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		traced[id] = true;</span><br><span class="line">		each(mod.depMaps, function (depMap, i) &#123;</span><br><span class="line">			var depId = depMap.id,</span><br><span class="line">				dep = getOwn(registry, depId);</span><br><span class="line"></span><br><span class="line">			//Only force things that have not completed</span><br><span class="line">			//being defined, so still in the registry,</span><br><span class="line">			//and only if it has not been matched up</span><br><span class="line">			//in the module already.</span><br><span class="line">			if (dep &amp;&amp; !mod.depMatched[i] &amp;&amp; !processed[depId]) &#123;</span><br><span class="line">				if (getOwn(traced, depId)) &#123;</span><br><span class="line">					mod.defineDep(i, defined[depId]);</span><br><span class="line">					mod.check(); //pass false?</span><br><span class="line">				&#125; else &#123;</span><br><span class="line">					breakCycle(dep, traced, processed);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;);</span><br><span class="line">		processed[id] = true;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是在CommonJs中时，存在依赖的情况下，因为存在的只是引用，代码执行是在实际调用时才发生，在文件的开头和结尾也会有变量标识是否加载完成。一旦某个模块出现循环依赖加载<br>，就只输出已经执行到的部分，还未执行的部分不会输出。</p>
+<p>在ES6模块加载的循环加载情况下，ES6是动态引用的，不存在缓存值问题，而且模块里面的变量绑定所在的模块；不关心是否发生了循环加载，只是生成一个指向被加载模块的引用，需要开发者自己来保证真正取值的时候能够取到值。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/AMD、CMD/" rel="tag"># AMD、CMD</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/21/Vue.js中watch的高级用法/" rel="next" title="Vue.js中watch的高级用法">
+                <i class="fa fa-chevron-left"></i> Vue.js中watch的高级用法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/08/26/FIS-插件机制/" rel="prev" title="FIS 插件机制">
+                FIS 插件机制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">TiffanysBear</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#起源"><span class="nav-number">1.</span> <span class="nav-text">起源</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、动态加载一个js模块的方法，怎么保证异步和回调的执行"><span class="nav-number">1.1.</span> <span class="nav-text">1、动态加载一个js模块的方法，怎么保证异步和回调的执行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、怎么判断去加载js，怎么保证加载的顺序"><span class="nav-number">1.2.</span> <span class="nav-text">2、怎么判断去加载js，怎么保证加载的顺序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、require中的js文件是怎么判断已经loaded，怎么保证加载数据的数量是正确的？"><span class="nav-number">1.3.</span> <span class="nav-text">3、require中的js文件是怎么判断已经loaded，怎么保证加载数据的数量是正确的？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4、如果有循环引用，怎么判断出的，怎么解决的"><span class="nav-number">1.4.</span> <span class="nav-text">4、如果有循环引用，怎么判断出的，怎么解决的</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">TiffanysBear</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">52.7k</span>
+  
+</div>
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+<span class="post-meta-divider">|</span>
+
+<span id="busuanzi_container_page_pv">
+    文章点击次数:<span id="busuanzi_value_page_pv"></span>
+</span>
+
+<span class="post-meta-divider">|</span>
+
+<span id="busuanzi_container_site_uv">
+    本站浏览量:<span id="busuanzi_value_site_uv"></span>
+</span>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

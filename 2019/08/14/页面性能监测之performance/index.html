@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="性能监控,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="页面性能监测之performanceauthor: @TiffanysBear  最近，需要对业务上的一些性能做一些优化，比如降低首屏时间、减少核心按钮可操作时间等的一些操作；在这之前，需要建立的就是数据监控的准线，也就是说一开始的页面首屏数据是怎样的，优化之后的数据是怎样，需要有一个对比效果。此时，performance 这个API就非常合适了。 performance Performance">
+<meta name="keywords" content="性能监控">
+<meta property="og:type" content="article">
+<meta property="og:title" content="页面性能监测之performance">
+<meta property="og:url" content="https://github.com/Tiffanysbear/tiffanysbear.github.io/2019/08/14/页面性能监测之performance/index.html">
+<meta property="og:site_name" content="TiffanysBear">
+<meta property="og:description" content="页面性能监测之performanceauthor: @TiffanysBear  最近，需要对业务上的一些性能做一些优化，比如降低首屏时间、减少核心按钮可操作时间等的一些操作；在这之前，需要建立的就是数据监控的准线，也就是说一开始的页面首屏数据是怎样的，优化之后的数据是怎样，需要有一个对比效果。此时，performance 这个API就非常合适了。 performance Performance">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://github.com/Tiffanysbear/accumulation/raw/master/image/perf-1.png">
+<meta property="og:image" content="https://github.com/Tiffanysbear/accumulation/raw/master/image/perf-0.png">
+<meta property="og:updated_time" content="2019-10-20T07:54:24.727Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="页面性能监测之performance">
+<meta name="twitter:description" content="页面性能监测之performanceauthor: @TiffanysBear  最近，需要对业务上的一些性能做一些优化，比如降低首屏时间、减少核心按钮可操作时间等的一些操作；在这之前，需要建立的就是数据监控的准线，也就是说一开始的页面首屏数据是怎样的，优化之后的数据是怎样，需要有一个对比效果。此时，performance 这个API就非常合适了。 performance Performance">
+<meta name="twitter:image" content="https://github.com/Tiffanysbear/accumulation/raw/master/image/perf-1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/Tiffanysbear/tiffanysbear.github.io/2019/08/14/页面性能监测之performance/">
+
+
+
+
+
+  <title>页面性能监测之performance | TiffanysBear</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband">
+    </div>
+    <a href="https://github.com/tiffanysbear" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">TiffanysBear</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-vue">
+          <a href="/categories/Vue" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>
+            
+            Vue
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-react">
+          <a href="/categories/React" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>
+            
+            React
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Tiffanysbear/tiffanysbear.github.io/2019/08/14/页面性能监测之performance/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TiffanysBear">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="TiffanysBear">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">页面性能监测之performance</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-14T11:03:34+08:00">
+                2019-08-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Words count in article&#58;</span>
+                
+                <span title="Words count in article">
+                  2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>页面性能监测之performance<br>author: <a href="https://tiffanysbear.github.io/" target="_blank" rel="noopener">@TiffanysBear</a></p>
+</blockquote>
+<p>最近，需要对业务上的一些性能做一些优化，比如降低首屏时间、减少核心按钮可操作时间等的一些操作；在这之前，需要建立的就是数据监控的准线，也就是说一开始的页面首屏数据是怎样的，优化之后的数据是怎样，需要有一个对比效果。此时，performance 这个API就非常合适了。</p>
+<h3 id="performance"><a href="#performance" class="headerlink" title="performance"></a>performance</h3><blockquote>
+<p>Performance 接口可以获取到当前页面中与性能相关的信息。它是 High Resolution Time API 的一部分，同时也融合了 Performance Timeline API、Navigation Timing API、 User Timing API 和 Resource Timing API。</p>
+</blockquote>
+<blockquote>
+<p>该类型的对象可以通过调用只读属性 Window.performance 来获得。</p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Performance" target="_blank" rel="noopener">参考链接</a> <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Performance" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/Web/API/Performance</a></p>
+</blockquote>
+<h3 id="performance-timing对象"><a href="#performance-timing对象" class="headerlink" title="performance.timing对象"></a>performance.timing对象</h3><p>performance对象是全局的，它的timing属性是一个对象，它包含了各种与浏览器性能有关的时间数据，提供浏览器处理网页各个阶段的耗时。偷一个图~<br><img src="https://github.com/Tiffanysbear/accumulation/raw/master/image/perf-1.png" alt></p>
+<p>performance.timing对象包含下列属性（全部只读）：</p>
+<ul>
+<li><p>navigationStart：当前浏览器窗口的前一个网页关闭，发生unload事件时的Unix毫秒时间戳。如果没有前一个网页，则等于fetchStart属性。</p>
+</li>
+<li><p>unloadEventStart：如果前一个网页与当前网页属于同一个域名，则返回前一个网页的unload事件发生时的Unix毫秒时间戳。如果没有前一个网页，或者之前的网页跳转不是在同一个域名内，则返回值为0。</p>
+</li>
+<li><p>unloadEventEnd：如果前一个网页与当前网页属于同一个域名，则返回前一个网页unload事件的回调函数结束时的Unix毫秒时间戳。如果没有前一个网页，或者之前的网页跳转不是在同一个域名内，则返回值为0。</p>
+</li>
+<li><p>redirectStart：返回第一个HTTP跳转开始时的Unix毫秒时间戳。如果没有跳转，或者不是同一个域名内部的跳转，则返回值为0。</p>
+</li>
+<li><p>redirectEnd：返回最后一个HTTP跳转结束时（即跳转回应的最后一个字节接受完成时）的Unix毫秒时间戳。如果没有跳转，或者不是同一个域名内部的跳转，则返回值为0。</p>
+</li>
+<li><p>fetchStart：返回浏览器准备使用HTTP请求读取文档时的Unix毫秒时间戳。该事件在网页查询本地缓存之前发生。</p>
+</li>
+<li><p>domainLookupStart：返回域名查询开始时的Unix毫秒时间戳。如果使用持久连接，或者信息是从本地缓存获取的，则返回值等同于fetchStart属性的值。</p>
+</li>
+<li><p>domainLookupEnd：返回域名查询结束时的Unix毫秒时间戳。如果使用持久连接，或者信息是从本地缓存获取的，则返回值等同于fetchStart属性的值。</p>
+</li>
+<li><p>connectStart：返回HTTP请求开始向服务器发送时的Unix毫秒时间戳。如果使用持久连接（persistent connection），则返回值等同于fetchStart属性的值。</p>
+</li>
+<li><p>connectEnd：返回浏览器与服务器之间的连接建立时的Unix毫秒时间戳。如果建立的是持久连接，则返回值等同于fetchStart属性的值。连接建立指的是所有握手和认证过程全部结束。</p>
+</li>
+<li><p>secureConnectionStart：返回浏览器与服务器开始安全链接的握手时的Unix毫秒时间戳。如果当前网页不要求安全连接，则返回0。</p>
+</li>
+<li><p>requestStart：返回浏览器向服务器发出HTTP请求时（或开始读取本地缓存时）的Unix毫秒时间戳。</p>
+</li>
+<li><p>responseStart：返回浏览器从服务器收到（或从本地缓存读取）第一个字节时的Unix毫秒时间戳。</p>
+</li>
+<li><p>responseEnd：返回浏览器从服务器收到（或从本地缓存读取）最后一个字节时（如果在此之前HTTP连接已经关闭，则返回关闭时）的Unix毫秒时间戳。</p>
+</li>
+<li><p>domLoading：返回当前网页DOM结构开始解析时（即Document.readyState属性变为“loading”、相应的readystatechange事件触发时）的Unix毫秒时间戳。</p>
+</li>
+<li><p>domInteractive：返回当前网页DOM结构结束解析、开始加载内嵌资源时（即Document.readyState属性变为“interactive”、相应的readystatechange事件触发时）的Unix毫秒时间戳。</p>
+</li>
+<li><p>domContentLoadedEventStart：返回当前网页DOMContentLoaded事件发生时（即DOM结构解析完毕、所有脚本开始运行时）的Unix毫秒时间戳。</p>
+</li>
+<li><p>domContentLoadedEventEnd：返回当前网页所有需要执行的脚本执行完成时的Unix毫秒时间戳。</p>
+</li>
+<li><p>domComplete：返回当前网页DOM结构生成时（即Document.readyState属性变为“complete”，以及相应的readystatechange事件发生时）的Unix毫秒时间戳。</p>
+</li>
+<li><p>loadEventStart：返回当前网页load事件的回调函数开始时的Unix毫秒时间戳。如果该事件还没有发生，返回0。</p>
+</li>
+<li><p>loadEventEnd：返回当前网页load事件的回调函数运行结束时的Unix毫秒时间戳。如果该事件还没有发生，返回0。</p>
+</li>
+</ul>
+<a id="more"></a>
+
+<h3 id="performance-API"><a href="#performance-API" class="headerlink" title="performance API"></a>performance API</h3><h4 id="1、performance-now"><a href="#1、performance-now" class="headerlink" title="1、performance.now()"></a>1、performance.now()</h4><p>performance.now()方法返回当前网页自从performance.timing.navigationStart到当前时间之间的毫秒数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">performance.now()</span><br><span class="line"></span><br><span class="line">// Date.now() 近似等于 (performance.timing.navigationStart + performance.now())</span><br></pre></td></tr></table></figure>
+
+<h4 id="2、performance-mark"><a href="#2、performance-mark" class="headerlink" title="2、performance.mark()"></a>2、performance.mark()</h4><p>该方法是做一个标记mark，结合measures方法，可以计算两个标记之间间隔的时间差；因此可以直接依据业务上的不同，计算两个业务逻辑之间的距离。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">// 以一个标志开始。</span><br><span class="line">performance.mark(&apos;mySetTimeout-start&apos;);</span><br><span class="line"></span><br><span class="line">// 等待一些时间。</span><br><span class="line">setTimeout(function() &#123;</span><br><span class="line">  // 标志时间的结束。</span><br><span class="line">  performance.mark(&apos;mySetTimeout-end&apos;);</span><br><span class="line"></span><br><span class="line">  // 测量两个不同的标志。</span><br><span class="line">  performance.measure(</span><br><span class="line">    &apos;mySetTimeout&apos;,</span><br><span class="line">    &apos;mySetTimeout-start&apos;,</span><br><span class="line">    &apos;mySetTimeout-end&apos;</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  // 获取所有的测量输出。</span><br><span class="line">  // 在这个例子中只有一个。</span><br><span class="line">  var measures = performance.getEntriesByName(&apos;mySetTimeout&apos;);</span><br><span class="line">  var measure = measures[0];</span><br><span class="line">  console.log(&apos;setTimeout milliseconds:&apos;, measure.duration)</span><br><span class="line"></span><br><span class="line">  // 清除存储的标志位</span><br><span class="line">  performance.clearMarks();</span><br><span class="line">  performance.clearMeasures();</span><br><span class="line">&#125;, 1000);</span><br></pre></td></tr></table></figure>
+
+<h4 id="3、performance-getEntries"><a href="#3、performance-getEntries" class="headerlink" title="3、performance.getEntries()"></a>3、performance.getEntries()</h4><p>浏览器获取网页时，会对网页中每一个对象（脚本文件、样式表、图片文件等等）发出一个HTTP请求。performance.getEntries方法以数组形式，返回这些请求的时间统计信息，有多少个请求，返回数组就会有多少个成员。</p>
+<p>由于该方法与浏览器处理网页的过程相关，所以只能在浏览器中使用。</p>
+<p><img src="https://github.com/Tiffanysbear/accumulation/raw/master/image/perf-0.png" alt></p>
+<h4 id="4、performance-navigation对象"><a href="#4、performance-navigation对象" class="headerlink" title="4、performance.navigation对象"></a>4、performance.navigation对象</h4><p>（1）performance.navigation.type: 该属性返回一个整数值，表示网页的加载来源</p>
+<blockquote>
+<p>0：网页通过点击链接、地址栏输入、表单提交、脚本操作等方式加载，相当于常数performance.navigation.TYPE_NAVIGATENEXT。</p>
+</blockquote>
+<blockquote>
+<p>1：网页通过“重新加载”按钮或者location.reload()方法加载，相当于常数performance.navigation.TYPE_RELOAD。</p>
+</blockquote>
+<blockquote>
+<p>2：网页通过“前进”或“后退”按钮加载，相当于常数performance.navigation.TYPE_BACK_FORWARD。</p>
+</blockquote>
+<blockquote>
+<p>255：任何其他来源的加载，相当于常数performance.navigation.TYPE_UNDEFINED。</p>
+</blockquote>
+<p>（2）performance.navigation.redirectCount: 该属性表示当前网页经过了多少次重定向跳转。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>因此根据图上的解释，封装了一个计算页面性能监控的基于performance的函数，用于返回性能数据。<br>可以根据自己的需求，在适合的时机执行函数，得到你需要的间隔时间duration。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @file: performance.js</span><br><span class="line"> * @author: Tiffany</span><br><span class="line"> * @description: 页面性能统计</span><br><span class="line"> */</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">var getPerformanceTiming = function () &#123;</span><br><span class="line">    var performance = window.performance;</span><br><span class="line"></span><br><span class="line">    if (!performance) &#123;</span><br><span class="line">        // 当前浏览器不支持 performance</span><br><span class="line">        return &#123;msg: &apos;not suport performance&apos;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    var t = performance.timing || &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    var ns = t.navigationStart;</span><br><span class="line">    var times = &#123;</span><br><span class="line">        // 间隔时间浏览器打开页面的耗时，</span><br><span class="line">        // 在首屏时间点执行这段函数呢，那就是首屏的耗时；</span><br><span class="line">        // 可以根据自己的业务需求，进行执行</span><br><span class="line">        duration: new Date().getTime() - ns,</span><br><span class="line">        // 页面渲染出第一个字符的耗时</span><br><span class="line">        ttfb: t.responseStart - ns,</span><br><span class="line">        // 响应结束到开始请求的时间，</span><br><span class="line">        // 可以参考静态资源的加载时间是否过长，是否能有优化的时间点</span><br><span class="line">        requestTime: t.responseEnd - t.requestStart</span><br><span class="line">    &#125;;</span><br><span class="line">   </span><br><span class="line">   </span><br><span class="line">    return times;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">module.exports = &#123;</span><br><span class="line">    getPerformanceTiming: getPerformanceTiming</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/性能监控/" rel="tag"># 性能监控</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/08/一些值得思考的面试题/" rel="next" title="一些值得思考的前端面试题">
+                <i class="fa fa-chevron-left"></i> 一些值得思考的前端面试题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/08/15/从0到1发布一个npm包/" rel="prev" title="从0到1发布一个npm包">
+                从0到1发布一个npm包 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">TiffanysBear</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#performance"><span class="nav-number">1.</span> <span class="nav-text">performance</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#performance-timing对象"><span class="nav-number">2.</span> <span class="nav-text">performance.timing对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#performance-API"><span class="nav-number">3.</span> <span class="nav-text">performance API</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、performance-now"><span class="nav-number">3.1.</span> <span class="nav-text">1、performance.now()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、performance-mark"><span class="nav-number">3.2.</span> <span class="nav-text">2、performance.mark()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、performance-getEntries"><span class="nav-number">3.3.</span> <span class="nav-text">3、performance.getEntries()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4、performance-navigation对象"><span class="nav-number">3.4.</span> <span class="nav-text">4、performance.navigation对象</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">TiffanysBear</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">52.7k</span>
+  
+</div>
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+<span class="post-meta-divider">|</span>
+
+<span id="busuanzi_container_page_pv">
+    文章点击次数:<span id="busuanzi_value_page_pv"></span>
+</span>
+
+<span class="post-meta-divider">|</span>
+
+<span id="busuanzi_container_site_uv">
+    本站浏览量:<span id="busuanzi_value_site_uv"></span>
+</span>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

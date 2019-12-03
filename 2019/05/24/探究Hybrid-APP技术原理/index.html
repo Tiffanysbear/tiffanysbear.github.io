@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hybrid-APP技术,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="探究Hybrid-APP技术原理author: @TiffanysBear  背景随着Web技术的发展和移动互联网的发展，Hybrid技术已经成为一种前端开发的主流技术方案。那什么是Hybrid App呢？  Hybrid App（混合模式移动应用）是指介于web-app、native-app这两者之间的app，兼具” Native App良好用户交互体验的优势 “和” Web App跨平台开发">
+<meta name="keywords" content="Hybrid-APP技术">
+<meta property="og:type" content="article">
+<meta property="og:title" content="探究Hybrid-APP技术原理">
+<meta property="og:url" content="https://github.com/Tiffanysbear/tiffanysbear.github.io/2019/05/24/探究Hybrid-APP技术原理/index.html">
+<meta property="og:site_name" content="TiffanysBear">
+<meta property="og:description" content="探究Hybrid-APP技术原理author: @TiffanysBear  背景随着Web技术的发展和移动互联网的发展，Hybrid技术已经成为一种前端开发的主流技术方案。那什么是Hybrid App呢？  Hybrid App（混合模式移动应用）是指介于web-app、native-app这两者之间的app，兼具” Native App良好用户交互体验的优势 “和” Web App跨平台开发">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-10-20T07:54:24.725Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="探究Hybrid-APP技术原理">
+<meta name="twitter:description" content="探究Hybrid-APP技术原理author: @TiffanysBear  背景随着Web技术的发展和移动互联网的发展，Hybrid技术已经成为一种前端开发的主流技术方案。那什么是Hybrid App呢？  Hybrid App（混合模式移动应用）是指介于web-app、native-app这两者之间的app，兼具” Native App良好用户交互体验的优势 “和” Web App跨平台开发">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/Tiffanysbear/tiffanysbear.github.io/2019/05/24/探究Hybrid-APP技术原理/">
+
+
+
+
+
+  <title>探究Hybrid-APP技术原理 | TiffanysBear</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband">
+    </div>
+    <a href="https://github.com/tiffanysbear" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">TiffanysBear</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-vue">
+          <a href="/categories/Vue" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>
+            
+            Vue
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-react">
+          <a href="/categories/React" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>
+            
+            React
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Tiffanysbear/tiffanysbear.github.io/2019/05/24/探究Hybrid-APP技术原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TiffanysBear">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="TiffanysBear">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">探究Hybrid-APP技术原理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-24T15:35:04+08:00">
+                2019-05-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hybrid-APP/" itemprop="url" rel="index">
+                    <span itemprop="name">Hybrid-APP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Words count in article&#58;</span>
+                
+                <span title="Words count in article">
+                  1k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>探究Hybrid-APP技术原理<br>author: <a href="https://tiffanysbear.github.io/" target="_blank" rel="noopener">@TiffanysBear</a></p>
+</blockquote>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>随着Web技术的发展和移动互联网的发展，Hybrid技术已经成为一种前端开发的主流技术方案。那什么是Hybrid App呢？</p>
+<blockquote>
+<p>Hybrid App（混合模式移动应用）是指介于web-app、native-app这两者之间的app，兼具” Native App良好用户交互体验的优势 “和” Web App跨平台开发的优势 “。</p>
+</blockquote>
+<p>总的来说，就是既具有APP的体验和性能，又具有Web灵活的开发模式和跨平台开发能力。</p>
+<a id="more"></a>
+
+<h2 id="现有的技术方案"><a href="#现有的技术方案" class="headerlink" title="现有的技术方案"></a>现有的技术方案</h2><p>1、H5 + JSBridge，通过JSBridge完成H5和Native的通信，赋予H5一定的端能力。是一种基于WebView UI的解决方案。</p>
+<p>2、React-Native，进一步通过JSbridge将js解析为虚拟DOM传递到Native，并使用原生进行渲染。</p>
+<p>3、小程序解决方案，采用双线程的渲染机制，将渲染层WebView和逻辑层JavaScriptCore形成独立的模块，通过Native进行通信（setData），逻辑层的网络请求也会由Native进行转发。在UI方面，采用的是WebView和原生相结合的方式。</p>
+<h2 id="技术原理"><a href="#技术原理" class="headerlink" title="技术原理"></a>技术原理</h2><p>本文将从jsbridge的原理、实现、双向通信、接入方式和H5的嵌入方式进行详细阐述。</p>
+<h3 id="jsbridge的原理"><a href="#jsbridge的原理" class="headerlink" title="jsbridge的原理"></a>jsbridge的原理</h3><p>客户端能对WebView中请求进行拦截，都有相应的API：</p>
+<p>Android:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Android: shouldoverrideurlloading </span></span><br><span class="line">public boolean shouldOverrideUrlLoading(WebView view, <span class="built_in">String</span> url)&#123;</span><br><span class="line">	<span class="comment">//读取到url后自行进行分析处理</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">//如果返回false，则WebView处理链接url，如果返回true，代表WebView根据程序来执行url</span></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>IOS:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// IOS: shouldStartLoadWithRequest </span></span><br><span class="line">- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType &#123;</span><br><span class="line">    NSURL *url = [request URL];</span><br><span class="line">     </span><br><span class="line">    NSString *requestString = [[request URL] absoluteString];</span><br><span class="line">    <span class="comment">//获取url scheme后自行进行处理</span></span><br></pre></td></tr></table></figure>
+
+<p>因此，在页面中可以通过iframe加载src的方式触发相应的捕获函数，在捕获函数中可以对url中的参数进行解析；此外，Android还可以通过重写OnJSPrompt方法，对调用Prompt进行拦截，同样能实现通信的目的。</p>
+<p>示例：<br>调起ios端：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">iosInvoke</span>(<span class="params">scheme</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> elem = <span class="built_in">document</span>.createElement(<span class="string">'iframe'</span>);</span><br><span class="line">    <span class="keyword">var</span> body = <span class="built_in">document</span>.body || <span class="built_in">document</span>.getElementsByTagName(<span class="string">'body'</span>)[<span class="number">0</span>];</span><br><span class="line">    elem.style.display = <span class="string">'none'</span>;</span><br><span class="line">    elem.src = scheme;</span><br><span class="line">    body.appendChild(elem);</span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        body.removeChild(elem);</span><br><span class="line">        elem = <span class="literal">null</span>;</span><br><span class="line">    &#125;, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调起android端：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">androidInvoke</span>(<span class="params">scheme</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> androidJsBridge = <span class="built_in">window</span>.Bdbox_android_jsbridge;</span><br><span class="line">    <span class="keyword">if</span> (androidJsBridge &amp;&amp; androidJsBridge.dispatch) &#123;</span><br><span class="line">        androidJsBridge.dispatch(scheme);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> re = <span class="built_in">window</span>.prompt(<span class="string">'BdboxApp:'</span> + <span class="built_in">JSON</span>.stringify(&#123;</span><br><span class="line">            obj: <span class="string">'Bdbox_android_jsbridge'</span>,</span><br><span class="line">            func: <span class="string">'dispatch'</span>,</span><br><span class="line">            args: [scheme]</span><br><span class="line">        &#125;));</span><br><span class="line">        <span class="keyword">return</span> re;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="协议制定URL-Scheme"><a href="#协议制定URL-Scheme" class="headerlink" title="协议制定URL Scheme"></a>协议制定URL Scheme</h3><p>URL Scheme是什么</p>
+<blockquote>
+<p>由于苹果的app都是在沙盒中，相互是不能访问数据的。但是苹果还是给出了一个可以在app之间跳转的方法：URL Scheme。简单的说，URL Scheme就是一个可以让app相互之间可以跳转的协议。每个app的URL Scheme都是不一样的，如果存在一样的URL Scheme，那么系统就会响应先安装那个app的URL Scheme，因为后安装的app的URL Scheme被覆盖掉了，是不能被调用的。</p>
+</blockquote>
+<p>设置URL Scheme</p>
+<blockquote>
+<p>xxxapp://communication?args=xx</p>
+</blockquote>
+<h3 id="如何进行双向通信"><a href="#如何进行双向通信" class="headerlink" title="如何进行双向通信"></a>如何进行双向通信</h3><p>双向通信主要是H5和Native的双向通信过程以及参数传递、回调执行。</p>
+<h4 id="H5通知Native："><a href="#H5通知Native：" class="headerlink" title="H5通知Native："></a>H5通知Native：</h4><p>H5通知Native的方式主要有：</p>
+<ul>
+<li>调用prompt/console/alert，调用时进行参数传递，端进行拦截重写</li>
+<li>URL Scheme跳转拦截，将参数放在请求URL上，详细的文章介绍 <a href="https://www.jianshu.com/p/eed01a661186" target="_blank" rel="noopener">URL Scheme</a></li>
+<li>API挂载，通过Navtive获取js执行环境，将相应的api挂载在js上，供h5调用</li>
+</ul>
+<h4 id="Native通知H5："><a href="#Native通知H5：" class="headerlink" title="Native通知H5："></a>Native通知H5：</h4><ul>
+<li>回调机制，在向Native传递信息时，将回调函数也传递，Native在调用完成后，使用js执行环境执行回调函数</li>
+</ul>
+<h3 id="接入方式"><a href="#接入方式" class="headerlink" title="接入方式"></a>接入方式</h3><ul>
+<li>jsbridge的接入，端方面的jsbridge和h5方面的jsbridge</li>
+</ul>
+<h3 id="嵌入方式"><a href="#嵌入方式" class="headerlink" title="嵌入方式"></a>嵌入方式</h3><p>h5的嵌入方式:</p>
+<ul>
+<li>直接代码，直接将H5代码css、html、js放入端目录下，以file协议的方式访问，优点是访问快速，缺点是迭代不方便。</li>
+<li>线上地址，以http协议访问，使用webview打开url形式，相较于代码嵌入的方式来说，速度比较慢，依赖网络传输速度；优点是迭代快速</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hybrid-APP技术/" rel="tag"># Hybrid-APP技术</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/22/getBoundingClientRect使用指南/" rel="next" title="getBoundingClientRect使用指南">
+                <i class="fa fa-chevron-left"></i> getBoundingClientRect使用指南
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/27/函数柯里化/" rel="prev" title="函数柯里化">
+                函数柯里化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">TiffanysBear</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#现有的技术方案"><span class="nav-number">2.</span> <span class="nav-text">现有的技术方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#技术原理"><span class="nav-number">3.</span> <span class="nav-text">技术原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jsbridge的原理"><span class="nav-number">3.1.</span> <span class="nav-text">jsbridge的原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#协议制定URL-Scheme"><span class="nav-number">3.2.</span> <span class="nav-text">协议制定URL Scheme</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何进行双向通信"><span class="nav-number">3.3.</span> <span class="nav-text">如何进行双向通信</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#H5通知Native："><span class="nav-number">3.3.1.</span> <span class="nav-text">H5通知Native：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Native通知H5："><span class="nav-number">3.3.2.</span> <span class="nav-text">Native通知H5：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接入方式"><span class="nav-number">3.4.</span> <span class="nav-text">接入方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#嵌入方式"><span class="nav-number">3.5.</span> <span class="nav-text">嵌入方式</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">TiffanysBear</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">52.7k</span>
+  
+</div>
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+<span class="post-meta-divider">|</span>
+
+<span id="busuanzi_container_page_pv">
+    文章点击次数:<span id="busuanzi_value_page_pv"></span>
+</span>
+
+<span class="post-meta-divider">|</span>
+
+<span id="busuanzi_container_site_uv">
+    本站浏览量:<span id="busuanzi_value_site_uv"></span>
+</span>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

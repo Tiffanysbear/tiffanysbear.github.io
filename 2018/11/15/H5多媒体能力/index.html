@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="多媒体能力,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="H5多媒体能力author: @TiffanysBear  H5多媒体能力 多媒体能力顾名思义就是H5提供的播放视频、音频能力。在HTML5中通过HTML标签&amp;lt;audio&amp;gt;和&amp;lt;video&amp;gt;来支持嵌入式的媒体，是开发者能够方便的将媒体嵌入。  ##例子###音频 123&amp;lt;audio src=&amp;quot;XXX&amp;quot;&amp;gt;你的浏览器不支持audio标签&amp;lt;/">
+<meta name="keywords" content="多媒体能力">
+<meta property="og:type" content="article">
+<meta property="og:title" content="H5多媒体能力">
+<meta property="og:url" content="https://github.com/Tiffanysbear/tiffanysbear.github.io/2018/11/15/H5多媒体能力/index.html">
+<meta property="og:site_name" content="TiffanysBear">
+<meta property="og:description" content="H5多媒体能力author: @TiffanysBear  H5多媒体能力 多媒体能力顾名思义就是H5提供的播放视频、音频能力。在HTML5中通过HTML标签&amp;lt;audio&amp;gt;和&amp;lt;video&amp;gt;来支持嵌入式的媒体，是开发者能够方便的将媒体嵌入。  ##例子###音频 123&amp;lt;audio src=&amp;quot;XXX&amp;quot;&amp;gt;你的浏览器不支持audio标签&amp;lt;/">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-10-20T07:54:24.720Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="H5多媒体能力">
+<meta name="twitter:description" content="H5多媒体能力author: @TiffanysBear  H5多媒体能力 多媒体能力顾名思义就是H5提供的播放视频、音频能力。在HTML5中通过HTML标签&amp;lt;audio&amp;gt;和&amp;lt;video&amp;gt;来支持嵌入式的媒体，是开发者能够方便的将媒体嵌入。  ##例子###音频 123&amp;lt;audio src=&amp;quot;XXX&amp;quot;&amp;gt;你的浏览器不支持audio标签&amp;lt;/">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/Tiffanysbear/tiffanysbear.github.io/2018/11/15/H5多媒体能力/">
+
+
+
+
+
+  <title>H5多媒体能力 | TiffanysBear</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband">
+    </div>
+    <a href="https://github.com/tiffanysbear" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">TiffanysBear</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-vue">
+          <a href="/categories/Vue" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>
+            
+            Vue
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-react">
+          <a href="/categories/React" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>
+            
+            React
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Tiffanysbear/tiffanysbear.github.io/2018/11/15/H5多媒体能力/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TiffanysBear">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="TiffanysBear">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">H5多媒体能力</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-15T11:29:21+08:00">
+                2018-11-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HTML-CSS/" itemprop="url" rel="index">
+                    <span itemprop="name">HTML && CSS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Words count in article&#58;</span>
+                
+                <span title="Words count in article">
+                  2.3k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">
+                  8
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>H5多媒体能力<br>author: <a href="https://tiffanysbear.github.io/" target="_blank" rel="noopener">@TiffanysBear</a></p>
+</blockquote>
+<h2 id="H5多媒体能力"><a href="#H5多媒体能力" class="headerlink" title="H5多媒体能力"></a>H5多媒体能力</h2><blockquote>
+<p>多媒体能力顾名思义就是H5提供的播放视频、音频能力。<br>在HTML5中通过HTML标签&lt;audio&gt;和&lt;video&gt;来支持嵌入式的媒体，是开发者能够方便的将媒体嵌入。</p>
+</blockquote>
+<p>##例子<br>###音频</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;audio src=&quot;XXX&quot;&gt;</span><br><span class="line">你的浏览器不支持audio标签</span><br><span class="line">&lt;/audio&gt;</span><br></pre></td></tr></table></figure>
+
+<p>###视频</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;video controls&gt;</span><br><span class="line">  &lt;source src=&quot;foo.ogg&quot; type=&quot;video/ogg&quot;&gt;</span><br><span class="line">  &lt;source src=&quot;foo.mp4&quot; type=&quot;video/mp4&quot;&gt;</span><br><span class="line">  你的浏览器不支持video标签</span><br><span class="line">&lt;/video&gt;</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTML/Supported_media_formats" target="_blank" rel="noopener">audio和video元素支持的媒体格式浏览器兼容性情况</a></p>
+<p>##&lt;audio&gt;标签</p>
+<blockquote>
+<p>如果元素包含 src 属性：零个或多个 &lt;track&gt; 元素，其后紧跟不包含 &lt;audio&gt; 或者 &lt;video&gt;媒体元素的透明内容。<br>或者：零个或多个 &lt;source&gt; 元素，其后紧跟零个或多个 &lt;track&gt; 元素，其后紧跟不包含 &lt;audio&gt; 或者 &lt;video&gt;媒体元素的透明内容。</p>
+</blockquote>
+<h3 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h3><ul>
+<li><p>autoplay [Boolean] 音频自动播放。</p>
+</li>
+<li><p>buffered 通过该属性获取已缓冲的资源的时间段信息。该属性包含一个 TimeRanges 对象。</p>
+</li>
+<li><p>controls 如果设置了该属性，浏览器将提供一个包含声音，播放进度，播放暂停的控制面板，让用户可以控制音频的播放。</p>
+</li>
+<li><p>loop [Boolean] 循环播放音频。</p>
+</li>
+<li><p>muted [Boolean] 表示是否静音的布尔值。默认值为false，表示有声音。</p>
+</li>
+<li><p>played 一个TimeRanges 对象，表示所有已播放的音频片段。</p>
+</li>
+<li><p>preload 枚举属性，让开发者自行思考来示意浏览器使用何种加载方式以达到最好的用户体验。可以是以下属性之一：</p>
+<ul>
+<li>none 示意用户可能不会播放该音频，或者服务器希望节省带宽；换句话说，该音频不会被缓存；</li>
+<li>metadata 示意即使用户可能不会播放该音频，但获取元数据 (例如音频长度) 还是有必要的。</li>
+<li>auto 示意用户可能会播放音频；换句话说，如果有必要，整个音频都将被加载，即使用户不期望使用。</li>
+<li>空字符串 等效于auto属性。</li>
+<li>假如不设置，默认值就是浏览器定义的了（不同浏览器会选择自己的默认值）， 即使规范建议设置为 metadata.</li>
+</ul>
+<blockquote>
+<ul>
+<li>autoplay 属性优先于 preload 假如用户想自动播放视频，那么很明显浏览器需要下载视频。同时设置autoplay 和 preload属性在规范里是允许的。</li>
+<li>规范没有强制浏览器去遵循该属性的值；这仅仅只是个提示。</li>
+</ul>
+</blockquote>
+</li>
+<li><p>src 嵌入的音频的URL。 该URL应遵从 HTTP access controls. 这是一个可选属性；你可以在audio元素中使用 &lt;source&gt; 元素来替代该属性指定嵌入的音频。</p>
+</li>
+<li><p>volume 音频播放的音量。值从0.0 (无声) 到 1.0 (最大声).</p>
+</li>
+</ul>
+<p>###事件<br>| 事件 | 描述 |<br>| —- | —- |<br>| <font color="#0000ff"><strong>abort</strong></font> | 在播放被终止时触发。|<br>| <font color="#0000ff"><strong>canplay</strong></font> | 在媒体数据已经有足够的数据（至少播放数帧）可供播放时触发。|<br>| canplaythrough |在媒体的readyState变为CAN_PLAY_THROUGH时触发，表明媒体可以在保持当前的下载速度的情况下不被中断地播放完毕。注意：手动设置currentTime会使得firefox触发一次canplaythrough事件，其他浏览器或许不会如此。|<br>| durationchange |元信息已载入或已改变，表明媒体的长度发生了改变。例如，在媒体已被加载足够的长度从而得知总长度时会触发这个事件。|<br>| emptied |媒体被清空（初始化）时触发。|<br>| <font color="#0000ff"><strong>ended</strong></font> |播放结束时触发。|<br>|<font color="#0000ff"><strong>error</strong></font>|在发生错误时触发。元素的error属性会包含更多信息|<br>| loadeddata | 媒体的第一帧已经加载完毕|<br>| <font color="#0000ff"><strong>loadedmetadata</strong></font> | 媒体的元数据已经加载完毕，现在所有的属性包含了它们应有的有效信息。|<br>| <font color="#0000ff"><strong>loadstart</strong></font> | 在媒体开始加载时触发。|<br>| mozaudioavailable |当音频数据缓存并交给音频层处理时|<br>| <font color="#0000ff"><strong>pause</strong></font> |播放暂停时触发。|<br>| <font color="#0000ff"><strong>play</strong></font> | 在媒体回放被暂停后再次开始时触发。即，在一次暂停事件后恢复媒体回放。|<br>| <font color="#0000ff"><strong>playing</strong></font> |在媒体开始播放时触发（不论是初次播放、在暂停后恢复、或是在结束后重新开始）。|<br>| <font color="#0000ff"><strong>progress</strong></font> | 告知媒体相关部分的下载进度时周期性地触发。有关媒体当前已下载总计的信息可以在元素的buffered属性中获取到。|<br>| ratechange | 在回放速率变化时触发。|<br>| seeked |在跳跃操作完成时触发。|<br>| seeking |在跳跃操作开始时触发。|<br>| stalled | 在尝试获取媒体数据，但数据不可用时触发。|<br>| <font color="#0000ff"><strong>suspend</strong></font> |在媒体资源加载终止时触发，这可能是因为下载已完成或因为其他原因暂停。|<br>| timeupdate |元素的currentTime属性表示的时间已经改变。|<br>| volumechange |在音频音量改变时触发（既可以是volume属性改变，也可以是muted属性改变）|<br>| waiting | 在一个待执行的操作（如回放）因等待另一个操作（如跳跃或下载）被延迟时触发。|</p>
+<p>###业内实例</p>
+<p>##&lt;vedio&gt;标签</p>
+<blockquote>
+<p>&lt;video&gt; 元素 用于在HTML或者XHTML文档中嵌入视频内容。包含任一 src 属性或是一个或多个 &lt;source&gt; 元素，其后紧跟流式内容 或 段落内容 ， 不包括&lt;video&gt; 或者 &lt;audio&gt; 元素。</p>
+</blockquote>
+<h3 id="属性-1"><a href="#属性-1" class="headerlink" title="属性"></a>属性</h3><ul>
+<li>autoplay [Boolean] 视频会马上自动开始播放，不会停下来等着数据载入结束。</li>
+<li>buffered 这个属性可以读取到哪段时间范围内的媒体被缓存了。该属性包含了一个 TimeRanges 对象。</li>
+<li>controls Gecko 会提供用户控制，允许用户控制视频的播放，包括音量，跨帧，暂停/恢复播放。</li>
+<li>crossorigin 该枚举属性指明抓取相关图片是否必须用到CORS（跨域资源共享）。不加这个属性时，抓取资源不会走CORS请求(即，不会发送 Origin: HTTP 头)，保证其在 &lt;canvas&gt; 元素中使用时不会被污染。如果指定非法值，会被当作指定了枚举关键字 anonymous 一样使用。<ul>
+<li>anonymous 跨域请求（即，使用 Origin: 的HTTP头）会被执行。但是不发送凭证（即，不发送cookie， X.509 证书或者 HTTP Basic 授权）。如果服务器不提供证书给源站点 (不设置 Access-Control-Allow-Origin: HTTP头)，图片会被 污染 并且它的使用会受限。</li>
+<li>use-credentials 跨域请求A cross-origin request (i.e. with Origin: HTTP header) 会被执行，且凭证会被发送 (即， 发送一个 cookie, 一个证书和HTTP Basic授权会被执行)。如果服务器不提供证书给源站点 (通过Access-Control-Allow-Credentials: HTTP 头)，图像会被 污染 且它的使用会受限。</li>
+</ul>
+</li>
+<li>height 视频展示区域的高度，单位是CSS像素。</li>
+<li>loop [Boolean] 指定后，会在视频结尾的地方，自动返回视频开始的地方。</li>
+<li>muted [Boolean] 指明了视频里的音频的默认设置。设置后，音频会初始化为静音。默认值是false,意味着视频播放的时候音频也会播放 。</li>
+<li>played 一个 TimeRanges 对象，指明了视频已经播放的所有范围。</li>
+<li>preload 该枚举属性旨在告诉浏览器作者认为达到最佳的用户体验的方式是什么。可能是下列值之一：<ul>
+<li>none 提示作者认为用户不需要查看该视频，服务器也想要最小化访问流量；换句话说就是提示浏览器该视频不需要缓存。</li>
+<li>metadata 提示尽管作者认为用户不需要查看该视频，不过抓取元数据（比如：长度）还是很合理的。</li>
+<li>auto 用户需要这个视频优先加载；换句话说就是提示：如果需要的话，可以下载整个视频，即使用户并不一定会用它。</li>
+<li>空字符串：也就代指 auto 值。</li>
+<li>autoplay 属性优先于 preload 假如用户想自动播放视频。</li>
+</ul>
+</li>
+<li>poster 一个海报帧的URL，用于在用户播放或者跳帧之前展示。如果属性未指定，那么在第一帧可用之前什么都不会展示；之后第一帧就像海报帧一样展示。</li>
+<li>src 要嵌到页面的视频的URL。可选；你也可以使用video块内的 <source> 元素来指定需要嵌到页面的视频。</li>
+<li>width 视频显示区域的宽度，单位是CSS像素。</li>
+</ul>
+<blockquote>
+<p>时间偏移量目前是指定为float类型的值，表示偏移的秒数</p>
+</blockquote>
+<p>###事件<br>同之前内容。</p>
+<p>###业内实例<br>####爱奇艺、腾讯视频、优酷<br>三大视频网站都是使用的是&lt;video&gt;元素来播放视频。<br>####哔哩哔哩<br>哔哩哔哩使用的是自己开源的播放器<a href="https://github.com/Bilibili/flv.js">flv.js</a><br>不过基本上也是用的&lt;video&gt;元素</p>
+<p>####现在github上star最多的视频播放器一个是<a href="https://github.com/videojs/video.js">videojs/video.js</a>,另一个是哔哩哔哩的<a href="https://github.com/Bilibili/flv.js">flv.js</a>,还有<a href="https://github.com/sampotts/plyr">sampotts/plyr</a>。音频视频播放器<a href="https://github.com/mediaelement/mediaelement">mediaelement/mediaelement</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/多媒体能力/" rel="tag"># 多媒体能力</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/11/《CSS世界》第六章-流的破坏与保护总结/" rel="next" title="《CSS世界》第六章 流的破坏与保护总结">
+                <i class="fa fa-chevron-left"></i> 《CSS世界》第六章 流的破坏与保护总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/15/百度小程序之间的页面通信/" rel="prev" title="百度小程序之间的页面通信.md">
+                百度小程序之间的页面通信.md <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">TiffanysBear</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#H5多媒体能力"><span class="nav-number">1.</span> <span class="nav-text">H5多媒体能力</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#属性"><span class="nav-number">1.1.</span> <span class="nav-text">属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#属性-1"><span class="nav-number">1.2.</span> <span class="nav-text">属性</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">TiffanysBear</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">52.7k</span>
+  
+</div>
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+<span class="post-meta-divider">|</span>
+
+<span id="busuanzi_container_page_pv">
+    文章点击次数:<span id="busuanzi_value_page_pv"></span>
+</span>
+
+<span class="post-meta-divider">|</span>
+
+<span id="busuanzi_container_site_uv">
+    本站浏览量:<span id="busuanzi_value_site_uv"></span>
+</span>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
