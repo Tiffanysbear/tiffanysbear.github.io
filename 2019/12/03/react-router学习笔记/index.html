@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="TiffanysBear">
 <meta property="og:description" content="react-router学习笔记author: @TiffanysBear  基本介绍React Router 是完整的 React 路由解决方案 React Router 保持 UI 与 URL 同步。它拥有简单的 API 与强大的功能例如代码缓冲加载、动态路由匹配、以及建立正确的位置过渡处理。 基础部分路由配置index路由配置：添加首页，设置默认页面，使用 IndexRoute 12345">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-17T12:33:59.825Z">
+<meta property="og:updated_time" content="2020-09-22T13:05:01.558Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="react-router学习笔记">
 <meta name="twitter:description" content="react-router学习笔记author: @TiffanysBear  基本介绍React Router 是完整的 React 路由解决方案 React Router 保持 UI 与 URL 同步。它拥有简单的 API 与强大的功能例如代码缓冲加载、动态路由匹配、以及建立正确的位置过渡处理。 基础部分路由配置index路由配置：添加首页，设置默认页面，使用 IndexRoute 12345">
@@ -403,6 +403,8 @@
 <h2 id="基础部分"><a href="#基础部分" class="headerlink" title="基础部分"></a>基础部分</h2><h3 id="路由配置"><a href="#路由配置" class="headerlink" title="路由配置"></a>路由配置</h3><p>index路由配置：添加首页，设置默认页面，使用 <code>IndexRoute</code></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">import &#123; IndexRoute &#125; from &apos;react-router&apos;</span><br><span class="line"></span><br><span class="line">const Dashboard = React.createClass(&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    return &lt;div&gt;Welcome to the app!&lt;/div&gt;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">React.render((</span><br><span class="line">  &lt;Router&gt;</span><br><span class="line">    &lt;Route path=&quot;/&quot; component=&#123;App&#125;&gt;</span><br><span class="line">      &#123;/* 当 url 为/时渲染 Dashboard */&#125;</span><br><span class="line">      &lt;IndexRoute component=&#123;Dashboard&#125; /&gt;</span><br><span class="line">      &lt;Route path=&quot;about&quot; component=&#123;About&#125; /&gt;</span><br><span class="line">      &lt;Route path=&quot;inbox&quot; component=&#123;Inbox&#125;&gt;</span><br><span class="line">        &lt;Route path=&quot;messages/:id&quot; component=&#123;Message&#125; /&gt;</span><br><span class="line">      &lt;/Route&gt;</span><br><span class="line">    &lt;/Route&gt;</span><br><span class="line">  &lt;/Router&gt;</span><br><span class="line">), document.body)</span><br></pre></td></tr></table></figure>
 
+<a id="more"></a>
+
 <h3 id="重定向-Redireact"><a href="#重定向-Redireact" class="headerlink" title="重定向 Redireact"></a>重定向 Redireact</h3><p>通过 <code>&lt;Redirect&gt;</code> 中的 from 和 to 进行路由的重定向。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">import &#123; Redirect &#125; from &apos;react-router&apos;</span><br><span class="line"></span><br><span class="line">React.render((</span><br><span class="line">	&lt;Router&gt;</span><br><span class="line">		&lt;Route&gt;</span><br><span class="line">			&lt;Redirect from=&quot;messages/:id&quot; to=&quot;/messages/:id&quot; /&gt;</span><br><span class="line">		&lt;/Route&gt;</span><br><span class="line">	&lt;/Router&gt;</span><br><span class="line">));</span><br></pre></td></tr></table></figure>
 
@@ -500,7 +502,19 @@
     
 
     <footer class="post-footer">
+
       
+      <div class="zijie-song">
+      <p>广告时间啦～</p>
+      <a href="https://job.bytedance.com/referral/pc/position?token=MTsxNjAwNzc4NTIwMjkxOzY3NDg3MTE0Nzg0OTg2NTc3OTk7NjcwNDU3OTA0NTY1NDI2ODE3Mg">投递地址：字节内推传送门，海量职位等你挑～</a>
+      <br>
+      <ul>
+        <li>内推完全免费，简历可获得优先筛选，进入面试人数众多；</li>
+        <li>直接通过我提供的链接进入投递，即可算作是我的内推，可靠、方便、快捷；</li>
+        <li>搜索 zhouf_Tiffany 加我个人微信（需要备注：字节内推-职位-真名，例如：字节内推-Android-张三，否则不加），一对一跟进进度，处理异常进度，人肉跟 HR 联系处理（已救活数人）；</li>
+        <li>及时同步最新招聘消息，有问题也可及时反馈给候选人；</li>
+      </ul>
+    </div>
         <div class="post-tags">
           
             <a href="/tags/React/" rel="tag"># React</a>
@@ -540,14 +554,12 @@
   </article>
 
 
-
     <div class="post-spread">
       
     </div>
   </div>
 
 
-            1111
           </div>
           
 
