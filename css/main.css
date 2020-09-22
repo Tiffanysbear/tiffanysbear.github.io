@@ -2986,6 +2986,20 @@ pre .javascript .function {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+.zijie-song {
+  background: #F0F4FF;
+  padding: 8px 16px;
+}
+.zijie-song p {
+  margin-bottom: 8px;
+}
+.zijie-song a {
+  font-weight: bold;
+}
+.zijie-song ul {
+  margin: 0;
+  padding: 11px 18px;
+}
 @media (max-width: 767px) {
   .post-body {
     text-align: justify;
